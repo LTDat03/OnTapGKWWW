@@ -18,14 +18,16 @@ import vn.edu.iuh.fit.ongk.repositories.QuanLyThuocImpl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class QuanLyThuoc implements QuanLyThuocImpl {
     Connection connection = ConnectionDB.getConnection();
     @Override
     public int addThuoc(Thuoc thuoc) {
-        String sql = "INSERT INTO thuoc (maThuoc, tenThuoc, donGia, namSX, maLoai) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO thuoc (maThuoc, tenThuoc, gia, namSX, maLoai) VALUES (?, ?, ?, ?, ?)";
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, thuoc.getMaThuoc());
@@ -60,5 +62,23 @@ public class QuanLyThuoc implements QuanLyThuocImpl {
             e.printStackTrace();
         }
         return listThuoc;
+    }
+
+    @Override
+    public Optional<Thuoc> findById(String id) throws Exception{
+        String sql = "SELECT * FROM thuoc WHERE maThuoc = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()){
+            String maThuoc = resultSet.getString(1);
+            String tenThuoc = resultSet.getString(2);
+            int donGia = resultSet.getInt(3);
+            int namSX = resultSet.getInt(4);
+            String maLoai = resultSet.getString(5);
+            Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, donGia, namSX, maLoai);
+            return Optional.of(thuoc);
+        }
+        return Optional.empty();
     }
 }

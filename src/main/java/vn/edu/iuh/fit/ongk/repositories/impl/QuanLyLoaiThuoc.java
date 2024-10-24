@@ -19,8 +19,10 @@ import vn.edu.iuh.fit.ongk.repositories.QuanLyLoaiThuocImpl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class QuanLyLoaiThuoc implements QuanLyLoaiThuocImpl {
     Connection connection = ConnectionDB.getConnection();
@@ -60,4 +62,20 @@ public class QuanLyLoaiThuoc implements QuanLyLoaiThuocImpl {
         }
         return listLoaiThuoc;
     }
+
+    @Override
+    public Optional<LoaiThuoc> findById(String id) throws SQLException {
+        String sql = "SELECT * FROM loaithuoc WHERE maLoai = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()){
+            String maLoai = resultSet.getString(1);
+            String tenLoai = resultSet.getString(2);
+            LoaiThuoc loaiThuoc = new LoaiThuoc(maLoai, tenLoai);
+            return Optional.of(loaiThuoc);
+        }
+        return Optional.empty();
+    }
+
 }

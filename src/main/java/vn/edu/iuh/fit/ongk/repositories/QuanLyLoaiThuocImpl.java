@@ -15,8 +15,10 @@ import vn.edu.iuh.fit.ongk.entities.LoaiThuoc;
 import vn.edu.iuh.fit.ongk.entities.Thuoc;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuanLyLoaiThuocImpl {
     public List<LoaiThuoc> findAll();
-     public List<LoaiThuoc> findByLoaiThuoc(String loaiThuoc);
+    public List<LoaiThuoc> findByLoaiThuoc(String loaiThuoc);
+    public Optional<LoaiThuoc> findById(String id) throws Exception;
 }
